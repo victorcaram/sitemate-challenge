@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import IssueItem from '../molecules/IssueItem';
-import axios from 'axios';
+import { Issue } from '../../types/issue';
+import './IssueList.css';
 
 interface IssueListProps {
-    onEdit: (issue: any) => void;
+    issues: Issue[];
+    onEdit: (issue: Issue) => void;
+    onDelete: (id: number) => void;
 }
 
-const IssueList: React.FC<IssueListProps> = ({ onEdit }) => {
-    const [issues, setIssues] = useState<any[]>([]);
-
-    useEffect(() => {
-        axios.get('http://localhost:8000/api/issues/')
-            .then(response => setIssues(response.data))
-            .catch(error => console.error("Error fetching issues", error));
-    }, []);
-
-    const handleDelete = (id: number) => {
-        axios.delete(`http://localhost:8000/api/issues/${id}/`)
-            .then(() => setIssues(issues.filter(issue => issue.id !== id)))
-            .catch(error => console.error("Error deleting issue", error));
-    };
-
+const IssueList: React.FC<IssueListProps> = ({ issues, onEdit, onDelete }) => {
     return (
-        <div>
-            {issues.map(issue => (
-                <IssueItem
-                    key={issue.id}
-                    title={issue.title}
-                    description={issue.description}
-                    onEdit={() => onEdit(issue)}
-                    onDelete={() => handleDelete(issue.id)}
-                />
-            ))}
+        <div className="issue-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {issues.map((issue) => (
+                        <IssueItem
+                            key={issue.id}
+                            title={issue.title}
+                            description={issue.description}
+                            onEdit={() => onEdit(issue)}
+                            onDelete={() => onDelete(issue.id)}
+                        />
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

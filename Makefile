@@ -3,6 +3,7 @@ help:
 	@echo ''
 	@echo 'setup-server ..................... Installs dependencies for the backend'
 	@echo 'setup-client ..................... Installs dependencies for the frontend'
+	@echo 'server-migrate ................... Runs the migrations for the server'
 	@echo 'test-server ...................... Runs server tests'
 	@echo 'run-server ....................... Runs the webserver'
 	@echo 'run-client ....................... Runs the React client'
@@ -20,6 +21,9 @@ clean:
 	@find . -name *.pyc -delete
 	@find . -name __pycache__ -delete
 	rm -rf client/node_modules
+
+server-migrate:
+	cd server && python3 manage.py migrate
 
 test-server:
 	cd server && python manage.py test

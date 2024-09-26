@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '../atoms/Button';
 
 interface IssueItemProps {
     title: string;
@@ -10,12 +9,14 @@ interface IssueItemProps {
 
 const IssueItem: React.FC<IssueItemProps> = ({ title, description, onEdit, onDelete }) => {
     return (
-        <div>
-            <h3>{title}</h3>
-            <p>{description}</p>
-            <Button onClick={onEdit} label="Edit" />
-            <Button onClick={onDelete} label="Delete" />
-        </div>
+        <tr>
+            <td>{title}</td>
+            <td>{description}</td>
+            <td>
+                <button className="edit-button" onClick={onEdit}>Edit</button>
+                <button className="delete-button" onClick={onDelete}>Delete</button>
+            </td>
+        </tr>
     );
 };
 

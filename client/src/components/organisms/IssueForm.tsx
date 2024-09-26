@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import IssueFormFields from '../molecules/IssueFormFields';
-import Button from '../atoms/Button';
-import axios from 'axios';
+import { Issue } from '../../types/issue';
+import './IssueForm.css';
 
 interface IssueFormProps {
-    selectedIssue: any | null;
-    onSubmit: (issue: any) => void;
+    selectedIssue: Issue | null;
+    onSubmit: (issue: Omit<Issue, 'id'>) => void;
 }
 
 const IssueForm: React.FC<IssueFormProps> = ({ selectedIssue, onSubmit }) => {
@@ -24,28 +23,30 @@ const IssueForm: React.FC<IssueFormProps> = ({ selectedIssue, onSubmit }) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        const data = { title, description };
-
-        if (selectedIssue) {
-            axios.put(`http://localhost:8000/api/issues/${selectedIssue.id}/`, data)
-                .then(response => onSubmit(response.data))
-                .catch(error => console.error("Error updating issue", error));
-        } else {
-            axios.post('http://localhost:8000/api/issues/', data)
-                .then(response => onSubmit(response.data))
-                .catch(error => console.error("Error creating issue", error));
-        }
+        const issueData = { title, description };
+        onSubmit(issueData);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <IssueFormFields
-                title={title}
-                description={description}
-                setTitle={(e) => setTitle(e.target.value)}
-                setDescription={(e) => setDescription(e.target.value)}
-            />
-            <Button onClick={() => { }} label={selectedIssue ? "Update" : "Create"} />
+        <form className="issue-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+                <label>Title:</label>
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                />
+            </div>
+            <button type="submit" className="submit-button">Submit</button>
         </form>
     );
 };
